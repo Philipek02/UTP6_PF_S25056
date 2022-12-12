@@ -1,21 +1,26 @@
 package zad2;
 
-
-
 public class Main {
 
   public static void main(String[] args) throws InterruptedException {
     StringTask task = new StringTask("A", 70000);
     System.out.println("Task " + task.getState());
     task.start();
-    if (args.length > 0 && args[0].equals("abort")) { 
-    /*<- tu zapisać kod  przerywający działanie tasku po sekundzie 
+    if (args.length > 0 && args[0].equals("abort")) {
+    /*<- tu zapisać kod  przerywający działanie tasku po sekundzie
          i uruchomic go w odrębnym wątku
     */
-      Thread.sleep(1000);
-      task.abort();
-      StringTask task2 = new StringTask(task.napis, task.liczba);
-      task2.start();
+      Thread t2 = new Thread(
+              ()-> {
+                try {
+                  Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                  e.printStackTrace();
+                }
+                task.abort();
+              }
+      );
+      t2.start();
     }
     while (!task.isDone()) {
       Thread.sleep(500);

@@ -1,9 +1,17 @@
 package zad2;
 
 public class StringTask implements Runnable{
+
+    public enum TaskState {
+        CREATED,
+        RUNNING,
+        ABORTED,
+        READY,
+    }
+    Thread t1;
     String napis;
-    int liczba;
-    String finalString="";
+    volatile int liczba;
+    volatile String finalString="";
     TaskState stan;
 
     public StringTask(String napis, int liczba){
@@ -14,31 +22,22 @@ public class StringTask implements Runnable{
     
     @Override
     public void run() {
-
         int liczbaPom = liczba;
         String napis2 = this.napis;
         for (int i = 0; i< liczbaPom-1; i++){
+            if(Thread.currentThread().isInterrupted())return;
             napis2 = napis2+napis;
         }
         this.finalString = napis2;
         this.stan = TaskState.READY;
-
     }
     public void start(){
-
         this.stan = TaskState.RUNNING;
-        this.run();
-        if (!Thread.currentThread().isInterrupted()) {
-            this.stan = TaskState.READY;
-        }else {
-            this.stan = TaskState.ABORTED;
-        }
+        t1 = new Thread(this);
+        t1.start();
     }
     public boolean isDone(){
-        if (stan == TaskState.ABORTED){
-            return false;
-        }
-        return true;
+        return stan == TaskState.READY || stan == TaskState.ABORTED;
     }
 
     public TaskState getState() {
@@ -47,9 +46,12 @@ public class StringTask implements Runnable{
     public String getResult(){
         return this.finalString;
     }
+
     public void abort(){
         this.stan = TaskState.ABORTED;
-        Thread.currentThread().interrupt();
+        t1.interrupt();
 
     }
 }
+
+
