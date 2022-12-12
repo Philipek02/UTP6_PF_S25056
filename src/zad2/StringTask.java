@@ -27,8 +27,9 @@ public class StringTask implements Runnable{
         for (int i = 0; i< liczbaPom-1; i++){
             if(Thread.currentThread().isInterrupted())return;
             napis2 = napis2+napis;
+            this.finalString = napis2;
         }
-        this.finalString = napis2;
+
         this.stan = TaskState.READY;
     }
     public void start(){
