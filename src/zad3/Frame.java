@@ -2,6 +2,8 @@ package zad3;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,10 +21,22 @@ public class Frame extends JFrame {
         setVisible(true);
         setResizable(false);
         Task<?> t1 = new Task<>("task1");
-        Task<?>[] tasks = {t1,t1,t1,t1,t1,t1};
+        Task<?> t2 = new Task<>("task2");
+        Task<?> t3 = new Task<>("task3");
+        Task<?> t4 = new Task<>("task4");
+        Task<?> t5 = new Task<>("task5");
+
+        Task<?>[] tasks = {t1,t2,t3,t4,t5};
         JList<Task<?>> list = new JList<>(tasks);
         list.setBackground(Color.BLUE);
+        t1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("pozdro");
+                t1.cancel(true);
 
+            }
+        });
 
         add(list);
 
